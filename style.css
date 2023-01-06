@@ -83,7 +83,7 @@
   }
   @keyframes blink {
     50% {
-      opacity: 0;
+      opacity: 50%;
     }
   }
   .text--title {
@@ -111,18 +111,52 @@
   #overlay {
     position: relative;
   }
-  
-  img {
-    opacity: .02;
-    width: 4000px;
-    height: 1000px;
+      
+  #p2 {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: -1; 
+    transform: translate(-51%, -50%) scale(0.4);
+    opacity: .8;
+    z-index: -1;
+    filter: blur(30px) grayscale(70);
   }
   
+  #rocket {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-52%, -46%) scale(0.25);
+    opacity: 0;
+    z-index: 1;
+  }
+
+  #moon {
+    position: absolute;
+    top: 20%;
+    left: 70%;
+    transform: translate(-20%, -20%) scale(0.1);
+    animation: bobbleMoon 1s ease-in-out infinite alternate;
+  }
+
+  @keyframes bobbleMoon {
+    0% {
+      transform: translate(-20%, -20%) translateY(0) scale(.1);
+    }
+    100% {
+      transform: translate(-20%, -20%) translateY(-0.1em) scale(.11);
+    }
+  }
+
+  @keyframes rotate {
+    from {
+      transform: translate(-52%, -48%) rotate(360deg) scale(3);
+    }
+    to {
+      transform: translate(-52%, -48%) rotate(0deg) scale(.08);
+    }
+  }
+    
   .portal {
     padding-bottom: 15px;
   }
@@ -182,14 +216,6 @@
       transform: translateY(0);
     }
   }
-  
-  #moon {
-    position: absolute;
-    top: 30%;
-    left: 20%;
-    animation: bob 1.5s ease-in-out infinite;
-  }
-  
   
   /* data uri for the portal image, nothing else below */
   .portalimg {

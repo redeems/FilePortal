@@ -71,14 +71,16 @@ var options = {
   };
   particlesJS("particle", options);
   
-  let filePath;
+  let filePath = "";
   document.getElementById("fileInput").addEventListener("change", function () {
     var file = this.files[0];
-    filePath = file.path;
+    console.log(file);
+    filePath = file.name;
   
     if (filePath) {
       var fileName = filePath.split("/").pop();
-      document.querySelector(".text--note").innerText = fileName;
+      portalSpeed();
+      document.querySelector(".text--note").innerText ="Create link for: " + fileName + "? Tap the portal to confirm!";
     }
   });
   
@@ -93,20 +95,28 @@ var options = {
   document.addEventListener("drop", function (e) {
     e.preventDefault();
     var file = e.dataTransfer.files[0];
-    filePath = file.path;
+    filePath = file.name;
   
     if (filePath) {
       var fileName = filePath.split("/").pop();
-      document.querySelector(".text--note").innerHtml = fileName;
+      portalSpeed();
+      document.querySelector(".text--note").innerHtml = "Create link for: " + fileName + "? Tap the portal to confirm!";
     }
   });
 
-  drawPlanetPhase(document.getElementById('moon'), 0.15, true);
-
-  const moon = document.getElementById('moon');
-
-function toggleBobbing() {
-  moon.classList.toggle('bobbing');
+function portalSpeed() {
+    var portalImg = document.querySelector('.portalimg');
+    portalImg.style.animationDuration = '2s';
+    playAnimation();
 }
 
-setInterval(toggleBobbing, 1000); // toggle the bobbing class every 1 second
+function playAnimation() {
+  var element = document.getElementById("rocket");
+  element.style.opacity = "100%";
+  element.style.animation = "rotate 3s linear";
+  element.style.animationIterationCount = "1";
+
+  element.addEventListener("animationend", function() {
+  element.style.opacity = "0%";
+  });
+}
