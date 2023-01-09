@@ -71,36 +71,32 @@ var options = {
 };
 particlesJS("particle", options);
 
-let filePath = "";
-let fileOut = "";
-let downloadLink = "";
-document.getElementById("fileInput").addEventListener("change", function () {
-    var file = this.files[0];
+const fileInput = document.getElementById("fileInput");
+
+fileInput.addEventListener("change", handleFileChange);
+document.addEventListener("click", () => fileInput.click());
+document.addEventListener("dragover", e => e.preventDefault());
+document.addEventListener("drop", handleFileDrop);
+
+function handleFileChange() {
+    const file = this.files[0];
     if (file) {
         portalSpeed();
         upload(file);
     }
-});
+}
 
-document.addEventListener("click", function () {
-    document.getElementById("fileInput").click();
-});
-
-document.addEventListener("dragover", function (e) {
-    e.preventDefault();
-});
-
-document.addEventListener("drop", function (e) {
+function handleFileDrop(e) {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
     if (file) {
         portalSpeed();
         upload(file);
     }
-});
+}
 
 function portalSpeed() {
-    var portalImg = document.querySelector('.portalimg');
+    const portalImg = document.querySelector('.portalimg');
     portalImg.style.animationDuration = '2s';
     playAnimation();
 }
@@ -111,9 +107,7 @@ function playAnimation() {
     element.style.animation = "rotate 3s linear";
     element.style.animationIterationCount = "1";
     document.querySelector(".text--note").innerText = "";
-
-
-    element.addEventListener("animationend", function () {
+    element.addEventListener("animationend", () => {
         element.style.opacity = "0%";
         document.querySelector(".text--note").innerText = downloadLink + "\n\n" + "CLICK TO COPY";
     });
@@ -127,10 +121,11 @@ function generateFileId() {
     }
     return fileId;
 }
+
 async function uploadFile(file, fileId) {
     const reader = new FileReader();
-    reader.onloadend = function() {
-        fetch('http://localhost:8080/files/' + fileId, {
+    reader.onloadend = function () {
+        fetch(`http://localhost:8080/files/${fileId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/octet-stream',
@@ -140,15 +135,14 @@ async function uploadFile(file, fileId) {
         })
             .then(response => console.log(response))
             .catch(error => console.error(error));
-    }
+    };
+
     reader.readAsArrayBuffer(file);
 }
-
 
 async function upload(file) {
     const fileId = generateFileId();
     await uploadFile(file, fileId);
-    downloadLink = `http://localhost:8080/files/` + fileId;
+    downloadLink = `http://localhost:8080/files/${fileId}`;
     await navigator.clipboard.writeText(downloadLink);
 }
-
