@@ -74,13 +74,21 @@ particlesJS("particle", options);
 const fileInput = document.getElementById("fileInput");
 
 fileInput.addEventListener("change", handleFileChange);
-document.addEventListener("click", () => fileInput.click());
+
+function click() {
+    fileInput.click();
+}
+
+document.addEventListener("click", click);
 document.addEventListener("dragover", e => e.preventDefault());
 document.addEventListener("drop", handleFileDrop);
 
 function handleFileChange() {
     const file = this.files[0];
     if (file) {
+        document.removeEventListener("click", click);
+        document.removeEventListener("dragover", e => e.preventDefault());
+        document.removeEventListener("drop", handleFileDrop);
         portalSpeed();
         upload(file);
     }
@@ -90,6 +98,9 @@ function handleFileDrop(e) {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
     if (file) {
+        document.removeEventListener("click", click);
+        document.removeEventListener("dragover", e => e.preventDefault());
+        document.removeEventListener("drop", handleFileDrop);
         portalSpeed();
         upload(file);
     }
@@ -110,6 +121,10 @@ function playAnimation() {
     element.addEventListener("animationend", () => {
         element.style.opacity = "0%";
         document.querySelector(".text--note").innerText = downloadLink + "\n\n" + "CLICK TO COPY";
+        document.addEventListener("click",() => {
+            navigator.clipboard.writeText(downloadLink);
+            document.querySelector(".text--note").innerText = "COPIED!";
+        });
     });
 }
 
@@ -144,5 +159,4 @@ async function upload(file) {
     const fileId = generateFileId();
     await uploadFile(file, fileId);
     downloadLink = `http://localhost:8080/files/${fileId}`;
-    await navigator.clipboard.writeText(downloadLink);
 }
